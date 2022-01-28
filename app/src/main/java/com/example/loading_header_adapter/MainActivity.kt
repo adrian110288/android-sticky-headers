@@ -8,7 +8,8 @@ import com.example.loading_header_adapter.lib.StickyHeaderAdapter
 import com.example.loading_header_adapter.lib.StickyHeadersLinearLayoutManager
 
 class MainActivity : AppCompatActivity() {
-    val listAdapter: StickyHeaderAdapter = RandomListAdapter()
+//    val listAdapter: StickyHeaderAdapter = RandomListAdapter()
+val listAdapter = RandomListAdapter()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -22,12 +23,15 @@ class MainActivity : AppCompatActivity() {
             this.adapter = listAdapter
         }
 
-
         var seq = 0
-        val addMore: Button = findViewById<Button>(R.id.add_more)
+        val addMore: Button = findViewById(R.id.add_more)
         addMore.setOnClickListener {
             seq++
             listAdapter.submitList(listAdapter.currentList + getList(seq).toList())
+        }
+        val setLoading: Button = findViewById(R.id.set_loading)
+        setLoading.setOnClickListener {
+            listAdapter.loading = !listAdapter.loading
         }
     }
 }
