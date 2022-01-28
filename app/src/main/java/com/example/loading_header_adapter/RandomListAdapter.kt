@@ -16,23 +16,21 @@ data class RandomItemModel(
 
 class RandomListAdapter : StickyHeaderAdapter() {
 
-    class HeaderViewHolder(view: View) : StickyHeaderAdapter.StickyHeaderAdapterViewHolder(view) {
+    class HeaderViewHolder(view: View) : StickyHeaderAdapterViewHolder(view) {
 
         override fun bind(model: StickyHeaderAdapterModel) {
             val model = model as RandomHeaderItemModel
             itemView.findViewById<TextView>(R.id.header_tv)
                 .text = model.title
         }
-
     }
 
-    class ItemViewHolder(view: View) : StickyHeaderAdapter.StickyHeaderAdapterViewHolder(view) {
+    class ItemViewHolder(view: View) : StickyHeaderAdapterViewHolder(view) {
         override fun bind(model: StickyHeaderAdapterModel) {
             val model = model as RandomItemModel
             itemView.findViewById<TextView>(R.id.item_tv)
                 .text = model.title
         }
-
     }
 
     override fun onCreateItemViewHolder(parent: ViewGroup): StickyHeaderAdapterViewHolder =
@@ -40,8 +38,8 @@ class RandomListAdapter : StickyHeaderAdapter() {
             LayoutInflater.from(parent.context).inflate(R.layout.item_layout, parent, false)
         )
 
-    override fun onCreateHeaderViewHolder(parent: ViewGroup): StickyHeaderAdapter.StickyHeaderAdapterViewHolder =
-        HeaderViewHolder(
+    override fun onCreateHeaderViewHolder(parent: ViewGroup): StickyHeaderAdapterViewHolder =
+        RandomListAdapter.HeaderViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.header_layout, parent, false)
         )
 

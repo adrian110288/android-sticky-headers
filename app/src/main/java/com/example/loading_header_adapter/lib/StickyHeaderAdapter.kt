@@ -1,6 +1,5 @@
 package com.example.loading_header_adapter.lib
 
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -44,13 +43,10 @@ abstract class StickyHeaderAdapter :
         abstract fun bind(model: StickyHeaderAdapterModel)
     }
 
-//    inner class ItemHolder(view: View): RecyclerView.ViewHolder(view)
-//    inner class HeaderHolder(view: View): RecyclerView.ViewHolder(view)
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): StickyHeaderAdapterViewHolder =
+    ): StickyHeaderAdapter.StickyHeaderAdapterViewHolder =
         when (viewType) {
             HEADER_TYPE -> onCreateHeaderViewHolder(parent)
             ITEM_TYPE -> onCreateItemViewHolder(parent)
@@ -97,7 +93,6 @@ abstract class StickyHeaderAdapter :
         getItem(position) is StickyHeaderAdapterModel.HeaderModel
 
     override fun setupStickyHeaderView(stickyHeader: View?) {
-        Log.i("", "")
     }
 
     override fun teardownStickyHeaderView(stickyHeader: View?) {

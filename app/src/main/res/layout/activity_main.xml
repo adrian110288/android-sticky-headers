@@ -1,7 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/list"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".MainActivity" />
+    android:orientation="vertical">
+    
+    <Button
+        android:id="@+id/add_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add more" />
+    
+    <Button
+        android:id="@+id/set_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Set loading" />
+    
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context=".MainActivity" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>
