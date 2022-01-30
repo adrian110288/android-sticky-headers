@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         addMore.setOnClickListener {
             seq++
             transactionsAdapter.submitItems(
-                transactionsAdapter.getCurrentItems + getTransactions2()
+                transactionsAdapter.currentItems + getTransactions2()
             )
         }
         val setLoading: Button = findViewById(R.id.set_loading)

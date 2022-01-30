@@ -17,7 +17,7 @@ import java.util.List;
 
 public class StickyHeadersLinearLayoutManager
         extends LinearLayoutManager {
-    private StickyHeaderAdapter mAdapter;
+    private StickyHeadersAdapter mAdapter;
 
     private float mTranslationX;
     private float mTranslationY;
@@ -82,7 +82,7 @@ public class StickyHeadersLinearLayoutManager
             mAdapter.unregisterAdapterDataObserver(mHeaderPositionsObserver);
         }
 
-        mAdapter = (StickyHeaderAdapter) adapter;
+        mAdapter = (StickyHeadersAdapter) adapter;
         mAdapter.registerAdapterDataObserver(mHeaderPositionsObserver);
         mHeaderPositionsObserver.onChanged();
     }
