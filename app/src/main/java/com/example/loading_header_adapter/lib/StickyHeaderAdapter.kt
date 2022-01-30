@@ -53,9 +53,9 @@ abstract class StickyHeaderAdapter :
             else -> throw RuntimeException("")
         }
 
-    protected abstract fun onCreateItemViewHolder(parent: ViewGroup): StickyHeaderAdapterViewHolder
-
     protected abstract fun onCreateHeaderViewHolder(parent: ViewGroup): StickyHeaderAdapterViewHolder
+
+    protected abstract fun onCreateItemViewHolder(parent: ViewGroup): StickyHeaderAdapterViewHolder
 
     override fun onBindViewHolder(holder: StickyHeaderAdapterViewHolder, position: Int) {
         when (getItem(position)) {

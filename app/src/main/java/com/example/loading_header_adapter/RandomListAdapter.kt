@@ -40,7 +40,7 @@ class RandomListAdapter : LoadingStickyHeaderAdapter() {
         )
 
     override fun onCreateHeaderViewHolder(parent: ViewGroup): StickyHeaderAdapter.StickyHeaderAdapterViewHolder =
-        RandomListAdapter.HeaderViewHolder(
+        HeaderViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.header_layout, parent, false)
         )
 
