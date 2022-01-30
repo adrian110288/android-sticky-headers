@@ -8,43 +8,34 @@ import com.example.loading_header_adapter.R
 import java.text.SimpleDateFormat
 import java.util.*
 
-data class DateHeaderModel(val dateFormatted: String) :
-    StickyHeaderAdapter.StickyHeaderAdapterModel.HeaderModel
+data class DateHeaderModel(val date: Date, val formattedDate: String) : HeaderModel
 
-abstract class DateStickyHeadersAdapter : AutoStickyHeadersAdapter() {
+class DateHeaderViewHolder(view: View) :
+    HeaderViewHolder<DateHeaderModel>(view) {
+
+    override fun bind(model: DateHeaderModel) {
+        itemView.findViewById<TextView>(R.id.header_tv).text = model.formattedDate
+    }
+}
+
+abstract class DateStickyHeadersAdapter<I : ItemModel, IVH : ItemViewHolder<I>> :
+    AutoStickyHeadersAdapter<DateHeaderModel, I, DateHeaderViewHolder, IVH>() {
 
     private val dateFormatter by lazy { SimpleDateFormat(getHeaderDateFormat()) }
 
-    class DateHeaderViewHolder(view: View) :
-        StickyHeaderAdapter.StickyHeaderAdapterViewHolder(view) {
-
-        override fun bind(model: StickyHeaderAdapterModel) {
-            val model = model as DateHeaderModel
-            itemView.findViewById<TextView>(R.id.header_tv)
-                .text = model.dateFormatted
-        }
-
-        companion object {
-
-            private const val LAYOUT_RES = R.layout.header_layout
-
-            fun create(parent: ViewGroup) = DateHeaderViewHolder(
-                LayoutInflater.from(parent.context).inflate(LAYOUT_RES, parent, false)
-            )
-        }
-    }
-
     override fun getHeaderModel(
         position: Int,
-        model: StickyHeaderAdapterModel
-    ): StickyHeaderAdapterModel.HeaderModel =
-        DateHeaderModel(getFormattedDate(getDate(position, model)))
-
-    override fun onCreateHeaderViewHolder(parent: ViewGroup): StickyHeaderAdapterViewHolder {
-        return DateHeaderViewHolder.create(parent)
+        model: I
+    ): DateHeaderModel = with(getDate(position, model)) {
+        DateHeaderModel(this, getFormattedDate(this))
     }
 
-    abstract fun getDate(position: Int, model: StickyHeaderAdapterModel): Date
+    override fun onCreateHeaderViewHolder(parent: ViewGroup): DateHeaderViewHolder =
+        DateHeaderViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.header_layout, parent, false)
+        )
+
+    abstract fun getDate(position: Int, model: I): Date
 
     open fun getHeaderDateFormat(): String = "d MMM yyyy"
 

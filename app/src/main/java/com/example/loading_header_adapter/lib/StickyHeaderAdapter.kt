@@ -6,16 +6,30 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
-abstract class StickyHeaderAdapter :
-    ListAdapter<StickyHeaderAdapter.StickyHeaderAdapterModel, StickyHeaderAdapter.StickyHeaderAdapterViewHolder>(
+sealed interface StickyHeaderAdapterModel
+interface HeaderModel : StickyHeaderAdapterModel
+interface ItemModel : StickyHeaderAdapterModel
+
+abstract class StickyHeaderAdapterViewHolder<M : StickyHeaderAdapterModel>(view: View) :
+    RecyclerView.ViewHolder(view) {
+    abstract fun bind(model: M)
+}
+
+abstract class HeaderViewHolder<H : StickyHeaderAdapterModel>(view: View) :
+    StickyHeaderAdapterViewHolder<H>(view) {
+    abstract override fun bind(model: H)
+}
+
+abstract class ItemViewHolder<I : StickyHeaderAdapterModel>(view: View) :
+    StickyHeaderAdapterViewHolder<I>(view) {
+    abstract override fun bind(model: I)
+}
+
+abstract class StickyHeaderAdapter<H : HeaderModel, I : ItemModel, HVH : HeaderViewHolder<H>, IVH : ItemViewHolder<I>> :
+    ListAdapter<StickyHeaderAdapterModel, StickyHeaderAdapterViewHolder<StickyHeaderAdapterModel>>(
         diffCallback
     ), StickyHeaders,
     StickyHeaders.ViewSetup {
-
-    sealed interface StickyHeaderAdapterModel {
-        interface HeaderModel : StickyHeaderAdapterModel
-        interface ItemModel : StickyHeaderAdapterModel
-    }
 
     companion object {
 
@@ -39,58 +53,57 @@ abstract class StickyHeaderAdapter :
 
     }
 
-    abstract class StickyHeaderAdapterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        abstract fun bind(model: StickyHeaderAdapterModel)
-    }
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): StickyHeaderAdapterViewHolder =
+    ): StickyHeaderAdapterViewHolder<StickyHeaderAdapterModel> =
         when (viewType) {
-            HEADER_TYPE -> onCreateHeaderViewHolder(parent)
-            ITEM_TYPE -> onCreateItemViewHolder(parent)
+            HEADER_TYPE -> onCreateHeaderViewHolder(parent) as StickyHeaderAdapterViewHolder<StickyHeaderAdapterModel>
+            ITEM_TYPE -> onCreateItemViewHolder(parent) as StickyHeaderAdapterViewHolder<StickyHeaderAdapterModel>
             else -> throw RuntimeException("")
         }
 
-    protected abstract fun onCreateHeaderViewHolder(parent: ViewGroup): StickyHeaderAdapterViewHolder
+    protected abstract fun onCreateHeaderViewHolder(parent: ViewGroup): HVH
 
-    protected abstract fun onCreateItemViewHolder(parent: ViewGroup): StickyHeaderAdapterViewHolder
+    protected abstract fun onCreateItemViewHolder(parent: ViewGroup): IVH
 
-    override fun onBindViewHolder(holder: StickyHeaderAdapterViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: StickyHeaderAdapterViewHolder<StickyHeaderAdapterModel>,
+        position: Int
+    ) {
         when (getItem(position)) {
-            is StickyHeaderAdapterModel.HeaderModel -> {
-                val headerItem = getItem(position) as StickyHeaderAdapterModel.HeaderModel
-                onBindHeaderViewHolder(holder, headerItem)
+            is HeaderModel -> {
+                val headerItem = getItem(position) as H
+                onBindHeaderViewHolder(holder as HVH, headerItem)
             }
-            is StickyHeaderAdapterModel.ItemModel -> {
-                val item = getItem(position) as StickyHeaderAdapterModel.ItemModel
-                onBindItemViewHolder(holder, item)
+            is ItemModel -> {
+                val item = getItem(position) as I
+                onBindItemViewHolder(holder as IVH, item)
             }
         }
     }
 
     open fun onBindHeaderViewHolder(
-        holder: StickyHeaderAdapterViewHolder,
-        model: StickyHeaderAdapterModel.HeaderModel
+        holder: HVH,
+        model: H
     ) {
         holder.bind(model)
     }
 
     open fun onBindItemViewHolder(
-        holder: StickyHeaderAdapterViewHolder,
-        model: StickyHeaderAdapterModel.ItemModel
+        holder: IVH,
+        model: I
     ) {
         holder.bind(model)
     }
 
     override fun getItemViewType(position: Int): Int = when (getItem(position)) {
-        is StickyHeaderAdapterModel.HeaderModel -> HEADER_TYPE
-        is StickyHeaderAdapterModel.ItemModel -> ITEM_TYPE
+        is HeaderModel -> HEADER_TYPE
+        is ItemModel -> ITEM_TYPE
     }
 
     override fun isStickyHeader(position: Int): Boolean =
-        getItem(position) is StickyHeaderAdapterModel.HeaderModel
+        getItem(position) is HeaderModel
 
     override fun setupStickyHeaderView(stickyHeader: View?) {
     }
@@ -98,4 +111,10 @@ abstract class StickyHeaderAdapter :
     override fun teardownStickyHeaderView(stickyHeader: View?) {
 
     }
+
+    val currentHeaders: List<H>
+        get() = currentList.filterIsInstance(HeaderModel::class.java) as List<H>
+
+    val getCurrentItems: List<I>
+        get() = currentList.filterIsInstance(ItemModel::class.java) as List<I>
 }

@@ -15,9 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StickyHeadersLinearLayoutManager<T extends RecyclerView.Adapter & StickyHeaders>
+public class StickyHeadersLinearLayoutManager
         extends LinearLayoutManager {
-    private T mAdapter;
+    private StickyHeaderAdapter mAdapter;
 
     private float mTranslationX;
     private float mTranslationY;
@@ -82,14 +82,9 @@ public class StickyHeadersLinearLayoutManager<T extends RecyclerView.Adapter & S
             mAdapter.unregisterAdapterDataObserver(mHeaderPositionsObserver);
         }
 
-        if (adapter instanceof StickyHeaders) {
-            mAdapter = (T) adapter;
-            mAdapter.registerAdapterDataObserver(mHeaderPositionsObserver);
-            mHeaderPositionsObserver.onChanged();
-        } else {
-            mAdapter = null;
-            mHeaderPositions.clear();
-        }
+        mAdapter = (StickyHeaderAdapter) adapter;
+        mAdapter.registerAdapterDataObserver(mHeaderPositionsObserver);
+        mHeaderPositionsObserver.onChanged();
     }
 
     @Override

@@ -6,33 +6,38 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import com.example.loading_header_adapter.R
 
-abstract class LoadingStickyHeaderAdapter : StickyHeaderAdapter() {
+abstract class LoadingStickyHeaderAdapter<H : HeaderModel, I : ItemModel, HVH : HeaderViewHolder<H>, IVH : ItemViewHolder<I>> :
+    StickyHeaderAdapter<H, I, HVH, IVH>() {
 
-    class LoadingViewHolder(view: View) : StickyHeaderAdapter.StickyHeaderAdapterViewHolder(view) {
+    class LoadingViewHolder(view: View) :
+        StickyHeaderAdapterViewHolder<StickyHeaderAdapterModel>(view) {
         override fun bind(model: StickyHeaderAdapterModel) {}
     }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): StickyHeaderAdapterViewHolder {
+    ): StickyHeaderAdapterViewHolder<StickyHeaderAdapterModel> {
         return if (viewType == LOADING_TYPE) onCreateLoadingViewHolder(parent)
         else super.onCreateViewHolder(parent, viewType)
     }
 
-    override fun onBindViewHolder(holder: StickyHeaderAdapterViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: StickyHeaderAdapterViewHolder<StickyHeaderAdapterModel>,
+        position: Int
+    ) {
         if (holder is LoadingViewHolder) onBindLoadingViewHolder(holder)
         else super.onBindViewHolder(holder, position)
     }
 
-    private fun onCreateLoadingViewHolder(parent: ViewGroup): StickyHeaderAdapterViewHolder {
+    private fun onCreateLoadingViewHolder(parent: ViewGroup): StickyHeaderAdapterViewHolder<StickyHeaderAdapterModel> {
         return LoadingViewHolder(
             LayoutInflater.from(parent.context).inflate(getLoadingItemLayout(), parent, false)
         )
     }
 
     open fun onBindLoadingViewHolder(
-        holder: StickyHeaderAdapterViewHolder
+        holder: StickyHeaderAdapterViewHolder<StickyHeaderAdapterModel>
     ) {
     }
 

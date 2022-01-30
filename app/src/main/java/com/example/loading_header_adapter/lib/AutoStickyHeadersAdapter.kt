@@ -1,15 +1,14 @@
 package com.example.loading_header_adapter.lib
 
-import com.example.loading_header_adapter.lib.StickyHeaderAdapter.StickyHeaderAdapterModel.HeaderModel
+abstract class AutoStickyHeadersAdapter<H : HeaderModel, I : ItemModel, HVH : HeaderViewHolder<H>, IVH : ItemViewHolder<I>> :
+    LoadingStickyHeaderAdapter<H, I, HVH, IVH>() {
 
-abstract class AutoStickyHeadersAdapter : LoadingStickyHeaderAdapter() {
-
-    override fun submitList(list: List<StickyHeaderAdapterModel>?) {
+    fun submitItems(list: List<I>?) {
         list ?: return
 
         val listWithHeaders = mutableListOf<StickyHeaderAdapterModel>()
 
-        val itemOnlySubmittedList = list
+        val itemOnlySubmittedList: List<I> = list
             .filter { it !is HeaderModel }
 
         itemOnlySubmittedList.forEachIndexed { index, model ->
@@ -25,10 +24,10 @@ abstract class AutoStickyHeadersAdapter : LoadingStickyHeaderAdapter() {
 
     abstract fun hasHeader(
         position: Int,
-        previousModel: StickyHeaderAdapterModel?,
-        model: StickyHeaderAdapterModel
+        previousModel: I?,
+        model: I
     ): Boolean
 
-    abstract fun getHeaderModel(position: Int, model: StickyHeaderAdapterModel): HeaderModel
+    abstract fun getHeaderModel(position: Int, model: I): H
 
 }

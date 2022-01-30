@@ -4,14 +4,11 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.example.loading_header_adapter.lib.StickyHeaderAdapter
-import com.example.loading_header_adapter.lib.StickyHeaderAdapter.StickyHeaderAdapterModel
 import com.example.loading_header_adapter.lib.StickyHeadersLinearLayoutManager
 import java.text.SimpleDateFormat
 
 class MainActivity : AppCompatActivity() {
 
-    //    val listAdapter = RandomListAdapter()
     val transactionsAdapter = TransactionListAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,21 +17,18 @@ class MainActivity : AppCompatActivity() {
 
         with(findViewById<RecyclerView>(R.id.list)) {
             val layoutManager =
-                StickyHeadersLinearLayoutManager<StickyHeaderAdapter>(
-                    context
-                )
+                StickyHeadersLinearLayoutManager(context)
             this.layoutManager = layoutManager
-//            this.adapter = listAdapter
             this.adapter = transactionsAdapter
         }
 
-        transactionsAdapter.submitList(getTransactions())
+        transactionsAdapter.submitItems(getTransactions())
         var seq = 0
         val addMore: Button = findViewById(R.id.add_more)
         addMore.setOnClickListener {
             seq++
-            transactionsAdapter.submitList(
-                transactionsAdapter.currentList + getTransactions2().toList()
+            transactionsAdapter.submitItems(
+                transactionsAdapter.getCurrentItems + getTransactions2()
             )
         }
         val setLoading: Button = findViewById(R.id.set_loading)
@@ -44,15 +38,7 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-fun MainActivity.getList(seq: Int): List<StickyHeaderAdapterModel> =
-    listOf(
-        RandomHeaderItemModel("Header $seq"),
-        RandomItemModel("Item ${seq * seq}"),
-        RandomItemModel("Item ${seq * seq + 1}"),
-        RandomItemModel("Item ${seq * seq + 2}")
-    )
-
-fun MainActivity.getTransactions(): List<StickyHeaderAdapterModel> =
+fun MainActivity.getTransactions(): List<TransactionModel> =
     listOf(
         TransactionModel("Transactions 1", "12-12-2021".toDate()),
         TransactionModel("Transactions 11", "12-12-2021".toDate()),
@@ -73,7 +59,7 @@ fun MainActivity.getTransactions(): List<StickyHeaderAdapterModel> =
         TransactionModel("Transactions 88", "10-01-2021".toDate()),
     )
 
-fun MainActivity.getTransactions2(): List<StickyHeaderAdapterModel> =
+fun MainActivity.getTransactions2(): List<TransactionModel> =
     listOf(
         TransactionModel("Transactions 888", "10-01-2021".toDate()),
         TransactionModel("Transactions 9", "09-01-2021".toDate()),
